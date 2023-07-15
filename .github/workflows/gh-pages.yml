@@ -1,4 +1,3 @@
-
 name: Build and Deploy
 on: # 监听 main 分支上的 push 事件
   push:
@@ -17,7 +16,7 @@ jobs:
         run: |
           npm install --legacy-peer-deps
           npm run build
-    # - run: tar -zcvf release.tgz .nuxt static nuxt.config.js package.json package-lock.json pm2.config.json
+      # - run: tar -zcvf release.tgz .nuxt static nuxt.config.js package.json package-lock.json pm2.config.json
       # 把.nuxt、nuxt.config.js等文件，打包压缩为release.tgz
 
       # BRANCH: 部署到提交到那个分支
@@ -32,4 +31,4 @@ jobs:
           build_dir: dist # 必选项
         env:
           # @see https://docs.github.com/cn/actions/reference/authentication-in-a-workflow#about-the-github_token-secret
-          GITHUB_TOKEN: ${{ secrets.YMLWORKS }}
+          GITHUB_TOKEN: ${{ secrets.GH_PAGES_KEY }}

@@ -39,3 +39,5 @@ See [Pinia 中文文档](https://pinia.web3doc.top/)
 #### pinia-plugin-persistedstate
 
 See [适用于 Pinia 的持久化存储插件](https://prazdevs.github.io/pinia-plugin-persistedstate/zh/)
+
+GH_PAGES_KEY： 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
