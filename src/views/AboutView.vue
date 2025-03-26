@@ -88,6 +88,10 @@ console.warn(addNum(100))
 }
 
 .box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
   min-width: 200px;
   width: 100%;
   height: 200px;
