@@ -71,15 +71,17 @@ console.warn(addNum(100))
 
 <style lang="less" scoped>
 @width: v-bind(width);
+
 @headerColor: #0000ff;
 
 .pic {
   width: @width;
-  height: v-bind(width);
+  height: @width;
   color: @headerColor;
+
   &::before {
+    color: #f0f;
     content: attr(data-index);
-    color: var(--theme_color);
   }
 }
 
@@ -87,32 +89,32 @@ console.warn(addNum(100))
   display: flex;
   align-items: center;
   justify-content: center;
-  user-select: none;
-  min-width: 200px;
   width: 100%;
+  min-width: 200px;
   height: 200px;
+  user-select: none;
   background:
-    linear-gradient(to left bottom, transparent 50%, rgba(0, 0, 0, 0.6) 0) no-repeat 100% 0 / 3em
-      3em,
+    linear-gradient(to left bottom, transparent 50%, rgb(0 0 0 / 60%) 0) no-repeat 100% 0 / 3em 3em,
     linear-gradient(225deg, transparent 2.1em, #58a 0);
-  // background: linear-gradient(225deg, transparent 50px, blue 50px);
 }
 
 .circle {
-  width: 0px;
-  height: 0px;
-  border-width: 100px;
+  width: 0;
+  height: 0;
+  border-color: transparent transparent rgb(75 214 11);
   border-style: solid;
-  border-color: transparent transparent rgb(75, 214, 11) transparent;
+  border-width: 100px;
   border-radius: 100%;
 }
+
 .semi {
-  background-color: #f00;
   position: absolute;
   width: 200px;
   height: 200px;
+  background-color: #f00;
   clip: rect(0 200px 200px 100px);
 }
+
 .semi2 {
   background-color: #fff;
   transform: rotate(65deg);

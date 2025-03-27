@@ -27,15 +27,16 @@ import TheWelcome from '../components/TheWelcome.vue'
 .quarter {
   width: 100px;
   height: 100px;
-  border-radius: 100px 0 0;
   background-color: #f0f;
+  border-radius: 100px 0 0;
 }
+
 .quarter-border {
+  box-sizing: border-box;
   width: 200px;
   height: 200px;
   border: 100px solid transparent;
   border-right-color: #f00;
-  box-sizing: border-box;
   border-radius: 100px;
 }
 
@@ -44,36 +45,37 @@ import TheWelcome from '../components/TheWelcome.vue'
   width: 200px;
   height: 200px;
 }
+
 .single-border::after {
-  content: '';
   position: absolute;
-  left: 0;
   top: 0;
+  left: 0;
+  box-sizing: border-box;
   width: 200%;
   height: 200%;
+  content: '';
   border: 1px solid black;
-  box-sizing: border-box;
   transform: scale(0.5, 0.5);
   transform-origin: 0 0;
 }
 
 .snip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 200px;
   height: 200px;
-  background: #000;
   color: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  background: #000;
 }
 
 .snip span {
   margin: 5px;
-  animation: 0.5s upDown infinite ease-in-out;
+  animation: 0.5s up-down infinite ease-in-out;
   animation-delay: calc(0.1s * var(--i));
 }
 
-@keyframes upDown {
+@keyframes up-down {
   0% {
     transform: translateY(0);
   }
@@ -91,7 +93,7 @@ import TheWelcome from '../components/TheWelcome.vue'
   }
 
   100% {
-    transform: translateY(0px);
+    transform: translateY(0);
   }
 }
 </style>
