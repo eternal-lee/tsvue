@@ -1,0 +1,20 @@
+{
+  "extends": [
+    "stylelint-config-recess-order",
+    "stylelint-config-recommended-vue",
+    "stylelint-config-standard"
+  ],
+  "ignoreFiles": ["**/node_modules/**", "**/vendor/**"],
+  "rules": {
+    "at-rule-descriptor-no-unknown": true,
+    "at-rule-descriptor-value-no-unknown": true,
+    "at-rule-prelude-no-invalid": true,
+    "declaration-property-value-no-unknown": true
+  },
+  "overrides": [
+    {
+      "files": ["**/*.vue", "**/*.html", "*.less", "**/*.less"],
+      "customSyntax": "postcss-html"
+    }
+  ]
+}
