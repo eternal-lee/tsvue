@@ -12,7 +12,6 @@
 </template>
 
 <script setup lang="ts">
-import axios from 'axios'
 import { GlobalStore } from '@/stores/index'
 import { computed, ref } from 'vue'
 // (async () => {
@@ -42,9 +41,6 @@ increment = () => {
 }
 
 const width = '200px'
-axios.post('/api/login').then((res) => {
-  console.warn(res.data)
-})
 
 function twoNums(nums: Array<number>, target: number): Array<any> {
   const arr = nums
