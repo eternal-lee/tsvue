@@ -5,6 +5,7 @@ import { createPinia } from 'pinia'
 
 import App from './App.vue'
 import router from './router'
+console.warn(import.meta.env)
 
 const app = createApp(App)
 
