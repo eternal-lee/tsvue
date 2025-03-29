@@ -2,7 +2,6 @@ pipeline {
      agent any
     environment {
         NODE_VERSION = '18.20.5' // 指定 Node.js 版本
-        IS_MAIN_BRANCH = env.BRANCH_NAME == 'master' || env.BRANCH_NAME == 'test' || env.BRANCH_NAME == 'dev' // 设置环境变量
     }
     stages {
         stage('Setup Node.js') {
@@ -31,7 +30,11 @@ pipeline {
         }
         stage('Install Dependencies') {
             when {
-                expression { env.IS_MAIN_BRANCH }
+                anyOf {
+                    branch 'master'
+                    branch 'dev'
+                    branch 'test'
+                }
             }
             steps {
                 echo 'Installing dependencies for branch...'
@@ -50,7 +53,11 @@ pipeline {
         }
         stage('Build') {
             when {
-                expression { env.IS_MAIN_BRANCH }
+                anyOf {
+                    branch 'master'
+                    branch 'dev'
+                    branch 'test'
+                }
             }
             steps {
                 script {
@@ -82,7 +89,11 @@ pipeline {
         }
         stage('Deploy') {
             when {
-                expression { env.IS_MAIN_BRANCH }
+                anyOf {
+                    branch 'master'
+                    branch 'dev'
+                    branch 'test'
+                }
             }
             steps {
                 script {
