@@ -118,5 +118,10 @@ pipeline {
         failure {
             echo 'Pipeline failed.'
         }
+        cleanup() {
+            echo 'Cleaning up workspace...'
+            deleteDir() // 删除工作区
+            echo 'Workspace cleanup completed.'
+        }
     }
 }
