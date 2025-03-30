@@ -76,6 +76,8 @@ pipeline {
                         echo "Build completed on $(date '+%Y-%m-%d %H:%M:%S')" > dist/version.txt
                     '''
                     echo "Build info file created in dist directory."
+                    sh "rm -rf node_modules"
+                    sh "rm -rf package-lock.json"
                 }
             }
         }
