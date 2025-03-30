@@ -7,17 +7,6 @@ pipeline {
         stage('Setup Node.js') {
             steps {
                 script {
-                    def nodeVersion = env.NODE_VERSION // 默认 Node.js 版本
-                    // 检查 .nvmrc 文件是否存在
-                    if (fileExists('.nvmrc')) {
-                        echo '.nvmrc file found, using specified Node.js version.'
-                         nodeVersion = sh(script: 'cat .nvmrc', returnStdout: true).trim()
-                    } else {
-                        echo '.nvmrc file not found, using default Node.js version.'
-                    }
-                    echo "Using Node.js version: ${nodeVersion}"
-                    sh "nvm install ${nodeVersion}"
-                    sh "nvm use ${nodeVersion}"
                     sh "node -v"
                     sh "npm -v"
                 }
