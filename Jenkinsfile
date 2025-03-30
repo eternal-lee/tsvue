@@ -89,18 +89,24 @@ pipeline {
             }
             steps {
                 script {
-                     if (env.BRANCH_NAME == 'master') {
-                        echo 'Deploying to production server...'
-                        sh "scp -r dist/* /workspace/nginx_home/html/web/tsvue/master"
-                    } else if (env.BRANCH_NAME == 'dev') {
-                        echo 'Deploying to development server...'
-                        sh "scp -r dist/* /workspace/nginx_home/html/web/tsvue/dev"
-                    } else if (env.BRANCH_NAME == 'test') {
-                        echo 'Deploying to test branch server...'
-                        sh "scp -r dist/* /workspace/nginx_home/html/web/tsvue/test"
-                    } else {
-                         echo "Skipping deployment for branch: ${env.BRANCH_NAME}"
-                    }
+                    echo 'Deploying to Nginx...'
+                    sh '''
+                        if [ -d "dist" ]; then
+                            echo "dist directory exists, deploying..."
+                            # 假设你有一个部署脚本 deploy.sh
+                            # sh deploy.sh
+                        else
+                            echo "dist directory does not exist, skipping deployment."
+                        fi
+                    '''
+                    echo 'Deployment completed.'
+                    echo 'Cleaning up...'
+                    sh '''
+                        rm -rf dist
+                        rm -rf node_modules
+                        rm -rf package-lock.json
+                    '''
+                    echo 'Cleanup completed.'
                 }
             }
         }
