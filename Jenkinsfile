@@ -2,30 +2,12 @@ pipeline {
      agent any
     environment {
         NODE_VERSION = '18.20.5' // 指定 Node.js 版本
-        NGINX_ROOT = '/usr/share/nginx/html' // Nginx 根目录
     }
-    // tools {
-    //     nodejs NODE_VERSION // 使用 Jenkins 中配置的 Node.js 工具
-    // }
+    tools {
+        nodejs NODE_VERSION // 使用 Jenkins 中配置的 Node.js 工具
+    }
     stages {
-        stage('Read Node.js Version') {
-            steps {
-                script {
-                    // 从 .nvmrc 文件中读取 Node.js 版本号
-                    if (fileExists('.nvmrc')) {
-                        env.NODE_VERSION = sh(script: 'cat .nvmrc', returnStdout: true).trim()
-                        echo "Using Node.js version from .nvmrc: ${env.NODE_VERSION}"
-                    } else {
-                        error ".nvmrc file not found!"
-                    }
-                }
-            }
-        }
         stage('Setup Node.js') {
-            tools {
-                // 使用从 .nvmrc 文件中读取的 Node.js 版本
-                nodejs "${NODE_VERSION}"
-            }
             steps {
                 script {
                     sh "node -v"
@@ -108,13 +90,30 @@ pipeline {
             steps {
                 script {
                     echo 'Deploying to Nginx...'
-                    // 定义目标路径
-                    def nginxTargetPath = "${env.NGINX_ROOT}/web/tsvue/${env.BRANCH_NAME}"
+                    def NGINX_CONTAINER_NAME = 'nginx' // 替换为实际的 Nginx 容器名称
+                    def NGINX_ROOT = '/usr/share/nginx/html' // Nginx 容器中的 HTML 根目录
+                    def SOURCE_PATH = 'dist' // Jenkins 容器中的构建输出目录
+                    def TARGET_PATH = "${NGINX_ROOT}/web/tsvue/${env.BRANCH_NAME}" // 目标路径
+                    
+                     if (env.BRANCH_NAME == 'master') {
+                        echo 'Deploying to production server...'
+                    } else if (env.BRANCH_NAME == 'dev') {
+                        echo 'Deploying to development server...'
+                    } else if (env.BRANCH_NAME == 'test') {
+                        echo 'Deploying to test branch server...'
+                    } else {
+                        echo "Skipping deployment for branch: ${env.BRANCH_NAME}"
+                        return
+                    }
+                    // 确保目标路径存在
+                    sh """
+                        docker exec ${NGINX_CONTAINER_NAME} mkdir -p ${TARGET_PATH}
+                    """
                     // 使用 docker cp 将文件从 Jenkins 容器复制到 Nginx 容器
                     sh """
-                        docker cp dist/. nginx:${nginxTargetPath}
+                        docker cp dist/* ${NGINX_CONTAINER_NAME}:${TARGET_PATH}
                     """
-                    echo "Files deployed to Nginx container at ${nginxTargetPath}"
+                    echo "Files deployed to Nginx container at ${TARGET_PATH}"
                 }
             }
         }
