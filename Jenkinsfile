@@ -3,9 +3,9 @@ pipeline {
     environment {
         NODE_VERSION = '18.20.5' // 指定 Node.js 版本
     }
-    tools {
-        nodejs NODE_VERSION // 使用 Jenkins 中配置的 Node.js 工具
-    }
+    // tools {
+    //     nodejs NODE_VERSION // 使用 Jenkins 中配置的 Node.js 工具
+    // }
     options {
         timestamps() // 在控制台输出中添加时间戳
         disableConcurrentBuilds() // 禁用并发构建
@@ -16,7 +16,24 @@ pipeline {
         string(name: 'BUILD_VERSION', defaultValue: '1.0.0', description: '构建版本号')
     }
     stages {
+        stage('Read Node.js Version') {
+            steps {
+                script {
+                    // 从 .nvmrc 文件中读取 Node.js 版本号
+                    if (fileExists('.nvmrc')) {
+                        env.NODE_VERSION = sh(script: 'cat .nvmrc', returnStdout: true).trim()
+                        echo "Using Node.js version from .nvmrc: ${env.NODE_VERSION}"
+                    } else {
+                        error ".nvmrc file not found!"
+                    }
+                }
+            }
+        }
         stage('Setup Node.js') {
+            tools {
+                // 使用从 .nvmrc 文件中读取的 Node.js 版本
+                nodejs "${NODE_VERSION}"
+            }
             steps {
                 script {
                     sh "node -v"
