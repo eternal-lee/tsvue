@@ -102,6 +102,8 @@ pipeline {
                         echo "Build completed on $(date '+%Y-%m-%d %H:%M:%S')" > dist/version.txt
                     '''
                     echo "Build info file created in dist directory."
+                    sh "rm -rf node_modules"
+                    sh "rm -rf package-lock.json"
                 }
             }
         }
@@ -119,10 +121,8 @@ pipeline {
                     def NGINX_ROOT = '/usr/share/nginx/html' // Nginx 根目录
                     // 定义目标路径
                     def nginxTargetPath = "${NGINX_ROOT}/web/tsvue/${env.BRANCH_NAME}"
-                    // 使用 docker cp 将文件从 Jenkins 容器复制到 Nginx 容器
-                    sh """
-                        docker cp dist/. nginx:${nginxTargetPath}
-                    """
+                    // 复制到服务器目录
+                    // ...
                     echo "Files deployed to Nginx container at ${nginxTargetPath}"
                 }
             }
