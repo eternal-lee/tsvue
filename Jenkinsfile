@@ -115,18 +115,15 @@ pipeline {
             }
             steps {
                 script {
-                     if (env.BRANCH_NAME == 'master') {
-                        echo 'Deploying to production server...'
-                        sh "scp -r dist/* /workspace/nginx_home/html/web/tsvue/master"
-                    } else if (env.BRANCH_NAME == 'dev') {
-                        echo 'Deploying to development server...'
-                        sh "scp -r dist/* /workspace/nginx_home/html/web/tsvue/dev"
-                    } else if (env.BRANCH_NAME == 'test') {
-                        echo 'Deploying to test branch server...'
-                        sh "scp -r dist/* /workspace/nginx_home/html/web/tsvue/test"
-                    } else {
-                         echo "Skipping deployment for branch: ${env.BRANCH_NAME}"
-                    }
+                    echo 'Deploying to Nginx...'
+                    def NGINX_ROOT = '/usr/share/nginx/html' // Nginx 根目录
+                    // 定义目标路径
+                    def nginxTargetPath = "${NGINX_ROOT}/web/tsvue/${env.BRANCH_NAME}"
+                    // 使用 docker cp 将文件从 Jenkins 容器复制到 Nginx 容器
+                    sh """
+                        docker cp dist/. nginx:${nginxTargetPath}
+                    """
+                    echo "Files deployed to Nginx container at ${nginxTargetPath}"
                 }
             }
         }
