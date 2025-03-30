@@ -10,7 +10,7 @@ pipeline {
                     sh '''
                         # 加载 nvm
                         export NVM_DIR="$HOME/.nvm"
-                        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+                        [ -s "$NVM_DIR/nvm.sh" ] && "$NVM_DIR/nvm.sh"
 
                         # 检查 .nvmrc 文件是否存在
                         if [ -f .nvmrc ]; then
@@ -48,7 +48,7 @@ pipeline {
                 echo 'Installing dependencies for branch...'
                 sh '''
                     export NVM_DIR="$HOME/.nvm"
-                    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+                    [ -s "$NVM_DIR/nvm.sh" ] && "$NVM_DIR/nvm.sh"
                     nvm use $NODE_VERSION
 
                     rm -rf node_modules
@@ -74,7 +74,7 @@ pipeline {
                 script {
                     sh '''
                         export NVM_DIR="$HOME/.nvm"
-                        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+                        [ -s "$NVM_DIR/nvm.sh" ] && "$NVM_DIR/nvm.sh"
                         nvm use $NODE_VERSION
 
                         if [ "$BRANCH_NAME" = "master" ]; then
