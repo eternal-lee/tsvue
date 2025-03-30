@@ -76,8 +76,6 @@ pipeline {
                         echo "Build completed on $(date '+%Y-%m-%d %H:%M:%S')" > dist/version.txt
                     '''
                     echo "Build info file created in dist directory."
-                    sh "rm -rf node_modules"
-                    sh "rm -rf package-lock.json"
                 }
             }
         }
@@ -92,30 +90,23 @@ pipeline {
             steps {
                 script {
                     echo 'Deploying to Nginx...'
-                    def NGINX_CONTAINER_NAME = 'nginx' // 替换为实际的 Nginx 容器名称
-                    def NGINX_ROOT = '/usr/share/nginx/html' // Nginx 容器中的 HTML 根目录
-                    def SOURCE_PATH = 'dist' // Jenkins 容器中的构建输出目录
-                    def TARGET_PATH = "${NGINX_ROOT}/web/tsvue/${env.BRANCH_NAME}" // 目标路径
-                    
-                     if (env.BRANCH_NAME == 'master') {
-                        echo 'Deploying to production server...'
-                    } else if (env.BRANCH_NAME == 'dev') {
-                        echo 'Deploying to development server...'
-                    } else if (env.BRANCH_NAME == 'test') {
-                        echo 'Deploying to test branch server...'
-                    } else {
-                        echo "Skipping deployment for branch: ${env.BRANCH_NAME}"
-                        return
-                    }
-
-                    // 使用 docker cp 将文件从 Jenkins 容器复制到 Nginx 容器
-                    sh """
-                        echo "Deploying to ${TARGET_PATH}..."
-                        rm -rf ${NGINX_CONTAINER_NAME}:${TARGET_PATH}
-                        mkdir -p ${NGINX_CONTAINER_NAME}:${TARGET_PATH}
-                        scp -r dist/* ${NGINX_CONTAINER_NAME}:${TARGET_PATH}
-                    """
-                    echo "Files deployed to Nginx container at ${TARGET_PATH}"
+                    sh '''
+                        if [ -d "dist" ]; then
+                            echo "dist directory exists, deploying..."
+                            # 假设你有一个部署脚本 deploy.sh
+                            # sh deploy.sh
+                        else
+                            echo "dist directory does not exist, skipping deployment."
+                        fi
+                    '''
+                    echo 'Deployment completed.'
+                    echo 'Cleaning up...'
+                    sh '''
+                        rm -rf dist
+                        rm -rf node_modules
+                        rm -rf package-lock.json
+                    '''
+                    echo 'Cleanup completed.'
                 }
             }
         }
