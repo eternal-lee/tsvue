@@ -45,6 +45,10 @@ pipeline {
                     branch 'test'
                 }
             }
+            tools {
+                // 使用从 .nvmrc 文件中读取的 Node.js 版本
+                nodejs "${NODE_VERSION}"
+            }
             steps {
                 echo 'Installing dependencies for branch...'
                 sh '''
@@ -67,6 +71,10 @@ pipeline {
                     branch 'dev'
                     branch 'test'
                 }
+            }
+            tools {
+                // 使用从 .nvmrc 文件中读取的 Node.js 版本
+                nodejs "${NODE_VERSION}"
             }
             steps {
                 script {
@@ -109,12 +117,23 @@ pipeline {
             steps {
                 script {
                     echo 'Deploying to Nginx...'
-                    def NGINX_ROOT = '/usr/share/nginx/html' // Nginx 根目录
-                    // 定义目标路径
-                    def nginxTargetPath = "${NGINX_ROOT}/web/tsvue/${env.BRANCH_NAME}"
-                    // 复制到服务器目录
-                    // ...
-                    echo "Files deployed to Nginx container at ${nginxTargetPath}"
+                    sh '''
+                        if [ -d "dist" ]; then
+                            echo "dist directory exists, deploying..."
+                            # 假设你有一个部署脚本 deploy.sh
+                            # sh deploy.sh
+                        else
+                            echo "dist directory does not exist, skipping deployment."
+                        fi
+                    '''
+                    echo 'Deployment completed.'
+                    echo 'Cleaning up...'
+                    sh '''
+                        rm -rf dist
+                        rm -rf node_modules
+                        rm -rf package-lock.json
+                    '''
+                    echo 'Cleanup completed.'
                 }
             }
         }
