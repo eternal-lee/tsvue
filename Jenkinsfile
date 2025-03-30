@@ -107,13 +107,13 @@ pipeline {
                         echo "Skipping deployment for branch: ${env.BRANCH_NAME}"
                         return
                     }
-                    // 确保目标路径存在
-                    sh """
-                        docker exec ${NGINX_CONTAINER_NAME} mkdir -p ${TARGET_PATH}
-                    """
+
                     // 使用 docker cp 将文件从 Jenkins 容器复制到 Nginx 容器
                     sh """
-                        docker cp dist/* ${NGINX_CONTAINER_NAME}:${TARGET_PATH}
+                        echo "Deploying to ${TARGET_PATH}..."
+                        rm -rf ${NGINX_CONTAINER_NAME}:${TARGET_PATH}
+                        mkdir -p ${NGINX_CONTAINER_NAME}:${TARGET_PATH}
+                        scp -r dist/* ${NGINX_CONTAINER_NAME}:${TARGET_PATH}
                     """
                     echo "Files deployed to Nginx container at ${TARGET_PATH}"
                 }
