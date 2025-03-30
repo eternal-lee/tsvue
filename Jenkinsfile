@@ -7,15 +7,6 @@ pipeline {
     // tools {
     //     nodejs NODE_VERSION // 使用 Jenkins 中配置的 Node.js 工具
     // }
-    options {
-        timestamps() // 在控制台输出中添加时间戳
-        disableConcurrentBuilds() // 禁用并发构建
-        timeout(time: 60, unit: 'MINUTES') // 设置超时时间
-    }
-    parameters {
-        choice(name: 'BRANCH_NAME', choices: ['master', 'dev', 'test'], description: '选择要构建的分支')
-        string(name: 'BUILD_VERSION', defaultValue: '1.0.0', description: '构建版本号')
-    }
     stages {
         stage('Read Node.js Version') {
             steps {
