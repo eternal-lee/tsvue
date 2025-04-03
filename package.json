@@ -62,7 +62,10 @@
     "vue-tsc": "^2.0.21"
   },
   "lint-staged": {
-    "*.{vue,js,jsx,ts,tsx}": "eslint --cache --fix"
+    "*.{vue,js,jsx,ts,tsx}": "eslint --cache --fix",
+    "*.{vue,css,less}": [
+      "stylelint"
+    ]
   },
   "config": {
     "commitizen": {
