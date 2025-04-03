@@ -1,5 +1,5 @@
 /* GlobalState */
 export interface GlobalState {
-  id?: string,
+  id?: string
   counter: number
 }
