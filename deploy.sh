@@ -4,7 +4,7 @@
 # 参数化变量
 # 远程服务器的地址
 REMOTE_HOST="root@47.109.60.109"  # 默认远程用户名:IP
-REMOTE_DIR=${3:-'/workspace/nginx_home/html/fontend/'}  # 远程目录路径
+REMOTE_DIR=${3:-'/workspace/nginx_home/html/frontend/'}  # 远程目录路径
 projectName=${4:-'tsvue'} # 默认项目名称
 current_branch=$(git branch --show-current) # 默认项目下打包路径
 
