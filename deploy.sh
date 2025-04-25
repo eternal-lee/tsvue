@@ -30,9 +30,10 @@ fi
 
 # 上传到远程服务器
 log "检查远程路径是否存在..."
+ssh -i ${SSH_KEY} -o "StrictHostKeyChecking=no" "${REMOTE_HOST}"
 ssh -i ${SSH_KEY} "${REMOTE_HOST}" "mkdir -p ${REMOTE_DIR}${projectName}/"
 
-log "开始上传文件到远程服务器 ${hostname}..."
+log "开始上传文件到远程服务器 ${REMOTE_HOST}..."
 scp -r -C -i ${SSH_KEY} deploy.tar.gz "${REMOTE_HOST}:${REMOTE_DIR}${projectName}/"
 if [ $? -ne 0 ]; then
   log "错误：文件上传失败。"
@@ -47,7 +48,7 @@ rm -rf ${distName} deploy.tar.gz
 
 # 远程解压和部署
 log "开始远程解压和部署..."
-ssh -i ~/.ssh/id_rsa "${REMOTE_HOST}" <<EOF
+ssh -i ${SSH_KEY} "${REMOTE_HOST}" <<EOF
   set -e
   cd "${REMOTE_DIR}${projectName}/"
   rm -rf ${distName}

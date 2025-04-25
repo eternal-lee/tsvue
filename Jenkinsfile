@@ -131,11 +131,11 @@ pipeline {
             }
             steps {
                 script {
-                    echo 'Deploying to Nginx...'
+                    echo "Deploying to Nginx..."
                         sh '''
                             #!/bin/bash
                             if [ -d "dist" ]; then
-                                echo "dist directory exists, deploying...${env.deployBranchName}"
+                                echo "dist directory exists, deploying..."
                                 # 复制打包文件
                                 cp -r dist ${env.deployBranchName}
                                 tar -czf deploy.tar.gz "${env.deployBranchName}" > /dev/null 2>&1
@@ -168,7 +168,7 @@ pipeline {
         }
         cleanup() {
             echo 'Cleaning up workspace...'
-            // deleteDir() // 删除工作区
+            deleteDir() // 删除工作区
             echo 'Workspace cleanup completed.'
         }
     }
