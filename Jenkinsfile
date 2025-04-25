@@ -22,42 +22,39 @@ pipeline {
         nodejs NODE_VERSION // 使用 Jenkins 中配置的 Node.js 工具
     }
     stages {
-        stage('getBranch') {
-            steps {
-                container('devops'){
-                    script {
-                        try {
-                            echo "masterBranchName: ${masterBranchName}"
-                            echo "testBranchName: ${testBranchName}"
-                            echo "devBranchName: ${devBranchName}"
-                            echo "base_branch: ${base_branch}"
-                            echo "BRANCH_NAME: ${BRANCH_NAME}" // 当前分支名
-                            if ("${masterBranchName}" == "${BRANCH_NAME}") {
-                                env.deployBranchName = "prod"
-                                env.buildCommand = "build"
-                            }
-                            if ("${testBranchName}" == "${BRANCH_NAME}") {
-                                env.deployBranchName = "test"
-                                env.buildCommand = "build:sit"
-                            }
-                            if ("${devBranchName}" == "${BRANCH_NAME}") {
-                                env.deployBranchName = "dev"
-                                env.buildCommand = "build:dev"
-                            }
-                        }
-                        catch (err) {
-                            echo err.getMessage()
-                        }
-                    }
-                } 
-            }
-        }
         stage('Setup Node.js') {
             steps {
                 script {
                     echo "deployBranchName---${env.deployBranchName}"
                     sh "node -v"
                     sh "npm -v"
+                }
+            }
+        }
+        stage('getBranch') {
+            steps {
+                script {
+                    try {
+                        echo "masterBranchName: ${masterBranchName}"
+                        echo "testBranchName: ${testBranchName}"
+                        echo "devBranchName: ${devBranchName}"
+                        echo "BRANCH_NAME: ${BRANCH_NAME}" // 当前分支名
+                        if ("${masterBranchName}" == "${BRANCH_NAME}") {
+                            env.deployBranchName = "prod"
+                            env.buildCommand = "build"
+                        }
+                        if ("${testBranchName}" == "${BRANCH_NAME}") {
+                            env.deployBranchName = "test"
+                            env.buildCommand = "build:sit"
+                        }
+                        if ("${devBranchName}" == "${BRANCH_NAME}") {
+                            env.deployBranchName = "dev"
+                            env.buildCommand = "build:dev"
+                        }
+                    }
+                    catch (err) {
+                        echo err.getMessage()
+                    }
                 }
             }
         }
