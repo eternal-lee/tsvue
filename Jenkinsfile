@@ -142,16 +142,7 @@ pipeline {
                                 echo "项目打包完成：deploy.tar.gz"
 
                                 # 假设你有一个部署脚本 deploy.sh
-                                try {
-                                    echo "开始远程上传..."
-                                    sh deploy.sh
-                                    echo "远程上传完成"
-                                } catch (err) {
-                                    echo "远程连接失败：${err.getMessage()}"
-                                }
-                                # 清理临时文件
-                                rm -rf ${deployBranchName}
-                                rm -rf deploy.tar.gz
+                                sh deploy.sh
                             else
                                 echo "dist directory does not exist, skipping deployment."
                             fi
