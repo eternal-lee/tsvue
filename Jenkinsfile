@@ -16,7 +16,7 @@ pipeline {
         testBranchName = "${testBranchName}"
         devBranchName = "${devBranchName}"
         sshCredentialId = "${sshCredentialId}"
-        SSH_KEY = "${SSH_KEY}"
+        SSH_KEY = credentials('IpRoot') // Jenkins 中配置的 SSH 密钥凭据 ID
     }
     tools {
         nodejs NODE_VERSION // 使用 Jenkins 中配置的 Node.js 工具
@@ -142,7 +142,16 @@ pipeline {
                                 echo "项目打包完成：deploy.tar.gz"
 
                                 # 假设你有一个部署脚本 deploy.sh
-                                sh deploy.sh
+                                try {
+                                    echo "开始远程上传..."
+                                    sh deploy.sh
+                                    echo "远程上传完成"
+                                } catch (err) {
+                                    echo "远程连接失败：${err.getMessage()}"
+                                }
+                                # 清理临时文件
+                                rm -rf ${deployBranchName}
+                                rm -rf deploy.tar.gz
                             else
                                 echo "dist directory does not exist, skipping deployment."
                             fi

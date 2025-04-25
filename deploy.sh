@@ -9,7 +9,7 @@ projectName=${4:-'tsvue'} # 默认项目名称
 current_branch=$(git branch --show-current) # 默认项目下打包路径
 
 # 一个变量名，用于引用私钥文件路径
-SSH_KEY='~/.ssh/id_rsa' 
+SSH_KEY='~/.ssh/id_rsa'
 
 # 日志函数
 log() {
@@ -17,20 +17,41 @@ log() {
 }
 
 # 检查 SSH 密钥是否配置
-if [ ! -f ~/.ssh/id_rsa ]; then
+if [ ! -f ${SSH_KEY/#\~/$HOME} ]; then
   log "错误：未找到 SSH 密钥，请配置无密码登录。"
   exit 1
 fi
 
+# 检查远程服务器是否可达
+log "检查远程服务器 ${REMOTE_HOST} 是否可达..."
+ssh -i ${SSH_KEY} -o "StrictHostKeyChecking=no" "${REMOTE_HOST}" exit
+if [ $? -ne 0 ]; then
+  log "错误：无法连接到远程服务器 ${REMOTE_HOST}。"
+  exit 1
+fi
+log "远程服务器 ${REMOTE_HOST} 可达。"
+
+# 检查当前分支是否为 master
+if [ -z "${current_branch}" ]; then
+  log "错误：无法获取当前分支。"
+  exit 1
+fi
+
+# 定义打包文件名distName
 if [[ "${current_branch}" == "master" ]]; then
   distName='prod'
 else
   distName="${current_branch}"
 fi
 
+# 检查打包文件是否存在
+if [ ! -f "deploy.tar.gz" ]; then
+  log "错误：打包文件 deploy.tar.gz 不存在。"
+  exit 1
+fi
+
 # 上传到远程服务器
-log "检查远程路径是否存在..."
-ssh -i ${SSH_KEY} -o "StrictHostKeyChecking=no" "${REMOTE_HOST}"
+log "开始创建远程目录 ${REMOTE_DIR}${projectName}/..."
 ssh -i ${SSH_KEY} "${REMOTE_HOST}" "mkdir -p ${REMOTE_DIR}${projectName}/"
 
 log "开始上传文件到远程服务器 ${REMOTE_HOST}..."
