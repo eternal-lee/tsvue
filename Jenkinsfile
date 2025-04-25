@@ -22,15 +22,6 @@ pipeline {
         nodejs NODE_VERSION // 使用 Jenkins 中配置的 Node.js 工具
     }
     stages {
-        stage('Setup Node.js') {
-            steps {
-                script {
-                    echo "deployBranchName---${env.deployBranchName}"
-                    sh "node -v"
-                    sh "npm -v"
-                }
-            }
-        }
         stage('getBranch') {
             steps {
                 script {
@@ -55,6 +46,15 @@ pipeline {
                     catch (err) {
                         echo err.getMessage()
                     }
+                }
+            }
+        }
+        stage('Setup Node.js') {
+            steps {
+                script {
+                    echo "deployBranchName---${env.deployBranchName}"
+                    sh "node -v"
+                    sh "npm -v"
                 }
             }
         }
@@ -133,15 +133,16 @@ pipeline {
                 script {
                     echo 'Deploying to Nginx...'
                         sh '''
+                            #!/bin/bash
                             if [ -d "dist" ]; then
-                                echo "dist directory exists, deploying..."
+                                echo "dist directory exists, deploying...${env.deployBranchName}"
                                 # 复制打包文件
                                 cp -r dist ${env.deployBranchName}
-                                tar -czf deploy.tar.gz "${distName}" > /dev/null 2>&1
+                                tar -czf deploy.tar.gz "${env.deployBranchName}" > /dev/null 2>&1
                                 log "项目打包完成：deploy.tar.gz"
 
                                 # 假设你有一个部署脚本 deploy.sh
-                                # sh deploy.sh
+                                sh deploy.sh
                             else
                                 echo "dist directory does not exist, skipping deployment."
                             fi
@@ -167,7 +168,7 @@ pipeline {
         }
         cleanup() {
             echo 'Cleaning up workspace...'
-            deleteDir() // 删除工作区
+            // deleteDir() // 删除工作区
             echo 'Workspace cleanup completed.'
         }
     }
