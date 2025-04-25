@@ -137,9 +137,9 @@ pipeline {
                             if [ -d "dist" ]; then
                                 echo "dist directory exists, deploying..."
                                 # 复制打包文件
-                                cp -r dist dev
-                                tar -czf deploy.tar.gz dev > /dev/null 2>&1
-                                log "项目打包完成：deploy.tar.gz"
+                                cp -r dist ${deployBranchName}
+                                tar -czf deploy.tar.gz ${deployBranchName} > /dev/null 2>&1
+                                echo "项目打包完成：deploy.tar.gz"
 
                                 # 假设你有一个部署脚本 deploy.sh
                                 sh deploy.sh
