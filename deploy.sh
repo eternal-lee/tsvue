@@ -4,8 +4,10 @@
 # 参数化变量
 # 远程服务器的地址
 REMOTE_HOST="root@47.109.60.109"  # 默认远程用户名:IP
+projectName=${1:-''} # 默认项目名称
+DIST_DIR=${2:-''}  # 默认打包目录
 REMOTE_DIR=${3:-'/workspace/nginx_home/html/frontend/'}  # 远程目录路径
-projectName=${4:-'tsvue'} # 默认项目名称
+
 
 # 一个变量名，用于引用私钥文件路径
 SSH_KEY="/var/jenkins_home/.ssh/id_rsa"
@@ -51,13 +53,14 @@ log "文件上传成功。"
 
 # 清理本地临时文件
 log "清理本地临时文件..."
-rm -rf deploy.tar.gz
+rm -rf ${DIST_DIR} deploy.tar.gz
 
 # 远程解压和部署
 log "开始远程解压和部署..."
 ssh -q -i ${SSH_KEY} "${REMOTE_HOST}" <<EOF
   set -e
   cd "${REMOTE_DIR}${projectName}/"
+  rm -rf  ${DIST_DIR}
   tar -xzf deploy.tar.gz
   rm -rf deploy.tar.gz
 EOF

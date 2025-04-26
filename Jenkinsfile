@@ -15,8 +15,6 @@ pipeline {
         masterBranchName = "${masterBranchName}"
         testBranchName = "${testBranchName}"
         devBranchName = "${devBranchName}"
-        sshCredentialId = "${sshCredentialId}"
-        SSH_KEY = credentials('IpRoot') // Jenkins 中配置的 SSH 密钥凭据 ID
     }
     tools {
         nodejs NODE_VERSION // 使用 Jenkins 中配置的 Node.js 工具
@@ -141,8 +139,9 @@ pipeline {
                                 tar -czf deploy.tar.gz ${deployBranchName} > /dev/null 2>&1
                                 echo "项目打包完成：deploy.tar.gz"
 
-                                # 假设你有一个部署脚本 deploy.sh
-                                bash deploy.sh
+                                # 假设你有一个部署脚本 deploy.sh 后面可以加参数
+                                # deploy.sh 参数1 参数2 参数3 参数4
+                                bash deploy.sh ${projectName} ${deployBranchName}
                             else
                                 echo "dist directory does not exist, skipping deployment."
                             fi
