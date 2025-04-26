@@ -38,7 +38,7 @@ fi
 
 # 上传到远程服务器
 log "开始创建远程目录 ${REMOTE_DIR}${projectName}/..."
-ssh -i ${SSH_KEY} "${REMOTE_HOST}" "mkdir -p ${REMOTE_DIR}${projectName}/"
+ssh -q -i ${SSH_KEY} "${REMOTE_HOST}" "mkdir -p ${REMOTE_DIR}${projectName}/"
 
 log "开始上传文件到远程服务器 ${REMOTE_HOST}..."
 scp -r -C -i ${SSH_KEY} deploy.tar.gz "${REMOTE_HOST}:${REMOTE_DIR}${projectName}/"
@@ -55,7 +55,7 @@ rm -rf deploy.tar.gz
 
 # 远程解压和部署
 log "开始远程解压和部署..."
-ssh -i ${SSH_KEY} "${REMOTE_HOST}" <<EOF
+ssh -q -i ${SSH_KEY} "${REMOTE_HOST}" <<EOF
   set -e
   cd "${REMOTE_DIR}${projectName}/"
   tar -xzf deploy.tar.gz
