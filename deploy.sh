@@ -16,8 +16,11 @@ log() {
   echo "$(date '+%Y-%m-%d %H:%M:%S') - $1"
 }
 
+# 替换 ~ 为 $HOME
+SSH_KEY_PATH=$(echo "$SSH_KEY" | sed "s|^~|$HOME|")
+
 # 检查 SSH 密钥是否配置
-if [ ! -f ${SSH_KEY/#\~/$HOME} ]; then
+if [ ! -f "$SSH_KEY_PATH" ]; then
   log "错误：未找到 SSH 密钥，请配置无密码登录。"
   exit 1
 fi
