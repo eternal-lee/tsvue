@@ -6,7 +6,6 @@
 REMOTE_HOST="root@47.109.60.109"  # 默认远程用户名:IP
 REMOTE_DIR=${3:-'/workspace/nginx_home/html/frontend/'}  # 远程目录路径
 projectName=${4:-'tsvue'} # 默认项目名称
-current_branch=$(git branch --show-current) # 默认项目下打包路径
 
 # 一个变量名，用于引用私钥文件路径
 SSH_KEY="/var/jenkins_home/.ssh/id_rsa"
@@ -31,19 +30,6 @@ if [ $? -ne 0 ]; then
 fi
 log "远程服务器 ${REMOTE_HOST} 可达。"
 
-# 检查当前分支是否为 master
-if [ -z "${current_branch}" ]; then
-  log "错误：无法获取当前分支。"
-  exit 1
-fi
-
-# 定义打包文件名distName
-if [[ "${current_branch}" == "master" ]]; then
-  distName='prod'
-else
-  distName="${current_branch}"
-fi
-
 # 检查打包文件是否存在
 if [ ! -f "deploy.tar.gz" ]; then
   log "错误：打包文件 deploy.tar.gz 不存在。"
@@ -65,14 +51,13 @@ log "文件上传成功。"
 
 # 清理本地临时文件
 log "清理本地临时文件..."
-rm -rf ${distName} deploy.tar.gz
+rm -rf deploy.tar.gz
 
 # 远程解压和部署
 log "开始远程解压和部署..."
 ssh -i ${SSH_KEY} "${REMOTE_HOST}" <<EOF
   set -e
   cd "${REMOTE_DIR}${projectName}/"
-  rm -rf ${distName}
   tar -xzf deploy.tar.gz
   rm -rf deploy.tar.gz
 EOF
