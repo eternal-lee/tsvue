@@ -142,7 +142,7 @@ pipeline {
                                 echo "项目打包完成：deploy.tar.gz"
 
                                 # 假设你有一个部署脚本 deploy.sh
-                                sh deploy.sh
+                                bash deploy.sh
                             else
                                 echo "dist directory does not exist, skipping deployment."
                             fi
