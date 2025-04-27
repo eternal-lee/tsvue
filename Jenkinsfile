@@ -1,3 +1,12 @@
+// 当前项目目录名称
+def projectName = "tsvue"
+// 当前项目生产分支名
+def masterBranchName = "master"
+// 当前项目质控分支名
+def testBranchName = "test"
+// 当前项目开发分支名
+def devBranchName = "dev"
+
 pipeline {
      agent any
     environment {
@@ -155,12 +164,12 @@ pipeline {
                                 echo "项目打包完成：deploy.tar.gz"
 
                                 # 使用 SSH 上传文件到远程服务器
-                                scp -r deploy.tar.gz root@47.109.60.109:/workspace/nginx_home/html/frontend/${deployBranchName}/
+                                scp -r deploy.tar.gz root@47.109.60.109:/workspace/nginx_home/html/frontend/tsvue/${deployBranchName}/
 
                                 # 使用 SSH 在远程服务器上解压并部署
                                 ssh root@47.109.60.109 <<EOF
                                     set -e
-                                    cd /workspace/nginx_home/html/frontend/${deployBranchName}/
+                                    cd /workspace/nginx_home/html/frontend/tsvue/${deployBranchName}/
                                     tar -xzf deploy.tar.gz
                                     rm -rf deploy.tar.gz
                                     echo "部署完成"
