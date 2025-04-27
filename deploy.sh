@@ -10,7 +10,7 @@ REMOTE_DIR=${3:-'/workspace/nginx_home/html/frontend/'}  # 远程目录路径
 
 
 # 一个变量名，用于引用私钥文件路径
-SSH_KEY="/var/jenkins_home/.ssh/id_rsa"
+SSH_KEY="~/.ssh/id_rsa"
 
 # 日志函数
 log() {
