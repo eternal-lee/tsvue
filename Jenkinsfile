@@ -7,6 +7,33 @@ pipeline {
     //     nodejs NODE_VERSION // 使用 Jenkins 中配置的 Node.js 工具
     // }
     stages {
+        stage('getBranch') {
+            steps {
+                script {
+                    try {
+                        echo "masterBranchName: ${masterBranchName}"
+                        echo "testBranchName: ${testBranchName}"
+                        echo "devBranchName: ${devBranchName}"
+                        echo "BRANCH_NAME: ${BRANCH_NAME}" // 当前分支名
+                        if ("${masterBranchName}" == "${BRANCH_NAME}") {
+                            env.deployBranchName = "prod"
+                            env.buildCommand = "build"
+                        }
+                        if ("${testBranchName}" == "${BRANCH_NAME}") {
+                            env.deployBranchName = "test"
+                            env.buildCommand = "build:sit"
+                        }
+                        if ("${devBranchName}" == "${BRANCH_NAME}") {
+                            env.deployBranchName = "dev"
+                            env.buildCommand = "build:dev"
+                        }
+                    }
+                    catch (err) {
+                        echo err.getMessage()
+                    }
+                }
+            }
+        }
         stage('Read Node.js Version') {
             steps {
                 script {
@@ -116,20 +143,37 @@ pipeline {
             }
             steps {
                 script {
-                    echo 'Deploying to Nginx...'
-                    sh '''
-                        if [ -d "dist" ]; then
-                            echo "dist directory exists, deploying..."
-                            # 假设你有一个部署脚本 deploy.sh
-                            # sh deploy.sh
-                        else
-                            echo "dist directory does not exist, skipping deployment."
-                        fi
-                    '''
+                    echo "Deploying to Nginx using SSH..."
+                    sshagent(['IpRoot']) { // 替换为 Jenkins 中配置的 SSH 凭据 ID
+                        sh '''
+                            #!/bin/bash
+                            if [ -d "dist" ]; then
+                                echo "dist directory exists, deploying..."
+                                # 复制打包文件
+                                cp -r dist ${deployBranchName}
+                                tar -czf deploy.tar.gz ${deployBranchName} > /dev/null 2>&1
+                                echo "项目打包完成：deploy.tar.gz"
+
+                                # 使用 SSH 上传文件到远程服务器
+                                scp -r deploy.tar.gz root@47.109.60.109:/workspace/nginx_home/html/frontend/${deployBranchName}/
+
+                                # 使用 SSH 在远程服务器上解压并部署
+                                ssh root@47.109.60.109 <<EOF
+                                    set -e
+                                    cd /workspace/nginx_home/html/frontend/${deployBranchName}/
+                                    tar -xzf deploy.tar.gz
+                                    rm -rf deploy.tar.gz
+                                    echo "部署完成"
+                                EOF
+                            else
+                                echo "dist directory does not exist, skipping deployment."
+                            fi
+                        '''
+                    }
                     echo 'Deployment completed.'
                     echo 'Cleaning up...'
                     sh '''
-                        rm -rf dist
+                        rm -rf dist .npm
                         rm -rf node_modules
                         rm -rf package-lock.json
                     '''
