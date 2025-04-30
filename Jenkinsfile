@@ -153,32 +153,14 @@ pipeline {
             steps {
                 script {
                     echo "Deploying to Nginx using SSH..."
-                    sshagent(['jenkin-ssh']) { // 替换为 Jenkins 中配置的 SSH 凭据 ID
-                        sh '''
-                            #!/bin/bash
-                            if [ -d "dist" ]; then
-                                echo "dist directory exists, deploying..."
-                                # 复制打包文件
-                                cp -r dist ${deployBranchName}
-                                tar -czf deploy.tar.gz ${deployBranchName} > /dev/null 2>&1
-                                echo "项目打包完成：deploy.tar.gz"
-
-                                # 使用 SSH 上传文件到远程服务器
-                                scp -r deploy.tar.gz root@47.109.60.109:/workspace/nginx_home/html/frontend/tsvue/${deployBranchName}/
-
-                                # 使用 SSH 在远程服务器上解压并部署
-                                ssh root@47.109.60.109 <<EOF
-                                    set -e
-                                    cd /workspace/nginx_home/html/frontend/tsvue/${deployBranchName}/
-                                    tar -xzf deploy.tar.gz
-                                    rm -rf deploy.tar.gz
-                                    echo "部署完成"
-                                EOF
-                            else
-                                echo "dist directory does not exist, skipping deployment."
-                            fi
-                        '''
-                    }
+                    sshagent(['jenkin-ssh']) {
+                         sh '''
+                             # 使用 SSH 连接到远程服务器并执行命令
+                             ssh root@47.109.60.109 "echo SSH connection successful"
+                             # 或者使用更复杂的命令，例如部署脚本
+                             echo '11111'
+                         '''
+                     }
                     echo 'Deployment completed.'
                     echo 'Cleaning up...'
                     sh '''
