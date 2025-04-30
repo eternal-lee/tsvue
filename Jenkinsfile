@@ -114,7 +114,19 @@ pipeline {
             }
             steps {
                 script {
-                    sh 'npm run ${env.buildCommand}'
+                    if (env.BRANCH_NAME == 'master') {
+                        echo 'Building for production...'
+                        sh 'npm run build:prod'
+                    } else if (env.BRANCH_NAME == 'dev') {
+                        echo 'Building for development...'
+                        sh 'npm run build:dev'
+                    } else if (env.BRANCH_NAME == 'test') {
+                        echo 'Building for test branch...'
+                        sh 'npm run build:test'
+                    } else {
+                        echo "Building for branch: ${env.BRANCH_NAME}"
+                    }
+
                     if (fileExists('dist')) {
                         echo 'dist directory exists, writing version.txt...'
                     } else {
@@ -141,7 +153,7 @@ pipeline {
             steps {
                 script {
                     echo "Deploying to Nginx using SSH..."
-                    sshagent(['mySSH']) { // 替换为 Jenkins 中配置的 SSH 凭据 ID
+                    sshagent(['IpRoot']) { // 替换为 Jenkins 中配置的 SSH 凭据 ID
                         sh '''
                             #!/bin/bash
                             if [ -d "dist" ]; then
