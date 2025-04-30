@@ -153,7 +153,7 @@ pipeline {
             steps {
                 script {
                     echo "Deploying to Nginx using SSH..."
-                    sshagent(['IpRoot']) { // 替换为 Jenkins 中配置的 SSH 凭据 ID
+                    sshagent(['jenkin-ssh']) { // 替换为 Jenkins 中配置的 SSH 凭据 ID
                         sh '''
                             #!/bin/bash
                             if [ -d "dist" ]; then
