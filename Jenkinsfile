@@ -155,11 +155,50 @@ pipeline {
                     echo "Deploying to Nginx using SSH..."
                     sshagent(['jenkin-ssh']) {
                          sh '''
-                             # 使用 SSH 连接到远程服务器并执行命令
-                             ssh root@47.109.60.109 "echo SSH connection successful"
-                             # 或者使用更复杂的命令，例如部署脚本
-                             echo '11111'
-                         '''
+                            #!/bin/bash
+                            # 远程服务器的地址
+                            REMOTE_HOST="root@47.109.60.109
+                            REMOTE_DIR=${3:-'/workspace/nginx_home/html/frontend/'}  # 远程目录路径
+                            if [ -d "dist" ]; then
+                                echo "dist directory exists, deploying..."
+                                # 复制打包文件
+                                cp -r dist ${deployBranchName}
+                                tar -czf deploy.tar.gz ${deployBranchName} > /dev/null 2>&1
+                                echo "项目打包完成：deploy.tar.gz"
+
+                                # 使用 SSH 连接到远程服务器并执行命令
+                                ssh ${REMOTE_HOST} "echo SSH connection successful"
+                                # 检查打包文件是否存在
+                                if [ ! -f "deploy.tar.gz" ]; then
+                                    echo "错误：打包文件 deploy.tar.gz 不存在。"
+                                    exit 1
+                                fi
+
+                                # 上传打包文件到远程服务器
+                                # 上传到远程服务器
+                                echo "开始创建远程目录 ${REMOTE_DIR}${projectName}/..."
+                                ssh -q "${REMOTE_HOST}" "mkdir -p ${REMOTE_DIR}${projectName}/"
+                                
+                                echo "开始上传文件到远程服务器 ${REMOTE_HOST}..."
+                                scp -r -C deploy.tar.gz "${REMOTE_HOST}:${REMOTE_DIR}${projectName}/"
+                                # 清理本地临时文件
+                                echo "清理本地临时文件..."
+                                rm -rf ${deployBranchName} deploy.tar.gz
+
+                                # 远程解压和部署
+                                echo "开始远程解压和部署..."
+                                ssh -q "${REMOTE_HOST}" <<EOF
+                                    set -e
+                                    cd "${REMOTE_DIR}${projectName}/"
+                                    rm -rf  ${deployBranchName}
+                                    tar -xzf deploy.tar.gz
+                                    rm -rf deploy.tar.gz
+                                EOF
+                                echo "Deployment completed successfully."
+                            else
+                                echo "dist directory does not exist, skipping deployment."
+                            fi
+                        '''
                      }
                     echo 'Deployment completed.'
                     echo 'Cleaning up...'
