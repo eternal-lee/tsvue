@@ -7,9 +7,6 @@ def testBranchName = "test"
 // 当前项目开发分支名
 def devBranchName = "dev"
 
-// 远程目录路径
-def REMOTE_DIR="/workspace/nginx_home/html/frontend/"
-
 pipeline {
      agent any
     environment {
@@ -159,6 +156,9 @@ pipeline {
                     sshagent(['jenkin-ssh']) {
                          sh '''
                             #!/bin/bash
+                            projectName = "tsvue"
+                            // 远程目录路径
+                            REMOTE_DIR="/workspace/nginx_home/html/frontend/"
                             if [ -d "dist" ]; then
                                 echo "dist directory exists, deploying..."
                                 # 复制打包文件
@@ -187,6 +187,10 @@ pipeline {
 
                                 # 远程解压和部署
                                 echo "开始远程解压和部署..."
+                                # <<EOF会报错
+                                # ssh root@47.109.60.109 <<EOF
+                                #     echo "deloying..."
+                                # EOF
                                 ssh root@47.109.60.109 "cd ${REMOTE_DIR}${projectName}/ && rm -rf ${deployBranchName} && tar -xzf deploy.tar.gz && rm -rf deploy.tar.gz"
                                 echo "Deployment completed successfully."
                             else
