@@ -187,9 +187,8 @@ pipeline {
 
                                 # 远程解压和部署
                                 echo "开始远程解压和部署..."
-                                ssh root@47.109.60.109 <<EOF
-                                    echo "Deployment completed successfully."
-                                EOF
+                                ssh root@47.109.60.109 "cd ${REMOTE_DIR}${projectName}/ && rm -rf ${deployBranchName} && tar -xzf deploy.tar.gz && rm -rf deploy.tar.gz"
+                                echo "Deployment completed successfully."
                             else
                                 echo "dist directory does not exist, skipping deployment."
                             fi
