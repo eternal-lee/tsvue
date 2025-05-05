@@ -173,28 +173,6 @@ pipeline {
                                     echo "错误：打包文件 deploy.tar.gz 不存在。"
                                     exit 1
                                 fi
-
-                                # 上传打包文件到远程服务器
-                                # 上传到远程服务器
-                                echo "开始创建远程目录 ${REMOTE_DIR}${projectName}/..."
-                                ssh -q "${REMOTE_HOST}" "mkdir -p ${REMOTE_DIR}${projectName}/"
-                                
-                                echo "开始上传文件到远程服务器 ${REMOTE_HOST}..."
-                                scp -r -C deploy.tar.gz "${REMOTE_HOST}:${REMOTE_DIR}${projectName}/"
-                                # 清理本地临时文件
-                                echo "清理本地临时文件..."
-                                rm -rf ${deployBranchName} deploy.tar.gz
-
-                                # 远程解压和部署
-                                echo "开始远程解压和部署..."
-                                ssh -q "${REMOTE_HOST}" <<EOF
-                                    set -e
-                                    cd "${REMOTE_DIR}${projectName}/"
-                                    rm -rf  ${deployBranchName}
-                                    tar -xzf deploy.tar.gz
-                                    rm -rf deploy.tar.gz
-                                EOF
-                                echo "Deployment completed successfully."
                             else
                                 echo "dist directory does not exist, skipping deployment."
                             fi
