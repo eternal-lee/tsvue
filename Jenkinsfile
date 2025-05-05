@@ -156,9 +156,6 @@ pipeline {
                     sshagent(['jenkin-ssh']) {
                          sh '''
                             #!/bin/bash
-                            # 远程服务器的地址
-                            REMOTE_HOST="root@47.109.60.109
-                            REMOTE_DIR=${3:-'/workspace/nginx_home/html/frontend/'}  # 远程目录路径
                             if [ -d "dist" ]; then
                                 echo "dist directory exists, deploying..."
                                 # 复制打包文件
@@ -167,12 +164,7 @@ pipeline {
                                 echo "项目打包完成：deploy.tar.gz"
 
                                 # 使用 SSH 连接到远程服务器并执行命令
-                                ssh ${REMOTE_HOST} "echo SSH connection successful"
-                                # 检查打包文件是否存在
-                                if [ ! -f "deploy.tar.gz" ]; then
-                                    echo "错误：打包文件 deploy.tar.gz 不存在。"
-                                    exit 1
-                                fi
+                                ssh root@47.109.60.109 "echo SSH connection successful"
                             else
                                 echo "dist directory does not exist, skipping deployment."
                             fi
