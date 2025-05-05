@@ -180,6 +180,21 @@ pipeline {
                                 ssh -q root@47.109.60.109 "mkdir -p ${REMOTE_DIR}${projectName}/"
                                 
                                 echo "开始上传文件到远程服务器 root@47.109.60.109..."
+                                scp -r -C deploy.tar.gz "root@47.109.60.109:${REMOTE_DIR}${projectName}/"
+                                # 清理本地临时文件
+                                echo "清理本地临时文件..."
+                                rm -rf ${deployBranchName} deploy.tar.gz
+
+                                # 远程解压和部署
+                                echo "开始远程解压和部署..."
+                                ssh -q root@47.109.60.109 <<EOF
+                                    set -e
+                                    cd "${REMOTE_DIR}${projectName}/"
+                                    rm -rf  ${deployBranchName}
+                                    tar -xzf deploy.tar.gz
+                                    rm -rf deploy.tar.gz
+                                EOF
+                                echo "Deployment completed successfully."
                             else
                                 echo "dist directory does not exist, skipping deployment."
                             fi
