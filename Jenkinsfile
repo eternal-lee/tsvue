@@ -6,11 +6,15 @@ def masterBranchName = "master"
 def testBranchName = "test"
 // 当前项目开发分支名
 def devBranchName = "dev"
+// 远程目录路径
+def REMOTE_DIR = '/workspace/nginx_home/html/frontend/'
 
 pipeline {
      agent any
     environment {
         NODE_VERSION = '18.20.5' // 指定 Node.js 版本
+        projectName = "${projectName}"
+        REMOTE_DIR = "${REMOTE_DIR}"
     }
     // tools {
     //     nodejs NODE_VERSION // 使用 Jenkins 中配置的 Node.js 工具
@@ -156,9 +160,6 @@ pipeline {
                     sshagent(['jenkin-ssh']) {
                          sh '''
                             #!/bin/bash
-                            projectName = "tsvue"
-                            // 远程目录路径
-                            REMOTE_DIR="/workspace/nginx_home/html/frontend/"
                             if [ -d "dist" ]; then
                                 echo "dist directory exists, deploying..."
                                 # 复制打包文件
