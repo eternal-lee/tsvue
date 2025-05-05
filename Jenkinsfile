@@ -7,6 +7,10 @@ def testBranchName = "test"
 // 当前项目开发分支名
 def devBranchName = "dev"
 
+def REMOTE_HOST="root@47.109.60.109"
+// 远程目录路径
+def REMOTE_DIR="/workspace/nginx_home/html/frontend/"
+
 pipeline {
      agent any
     environment {
@@ -164,7 +168,19 @@ pipeline {
                                 echo "项目打包完成：deploy.tar.gz"
 
                                 # 使用 SSH 连接到远程服务器并执行命令
-                                ssh root@47.109.60.109 "echo SSH connection successful"
+                                ssh ${REMOTE_HOST} "echo SSH connection successful"
+                                # 检查打包文件是否存在
+                                if [ ! -f "deploy.tar.gz" ]; then
+                                    echo "错误：打包文件 deploy.tar.gz 不存在。"
+                                    exit 1
+                                fi
+
+                                # 上传打包文件到远程服务器
+                                # 上传到远程服务器
+                                echo "开始创建远程目录 ${REMOTE_DIR}${projectName}/..."
+                                ssh -q ${REMOTE_HOST} "mkdir -p ${REMOTE_DIR}${projectName}/"
+                                
+                                echo "开始上传文件到远程服务器 ${REMOTE_HOST}..."
                             else
                                 echo "dist directory does not exist, skipping deployment."
                             fi
