@@ -42,9 +42,14 @@ increment = () => {
 
 const width = '200px'
 
-function twoNums(nums: Array<number>, target: number): Array<any> {
+/**
+ * 数组
+ * @param nums 数字
+ * @param target 目标值
+ */
+function twoNums(nums: number[], target: number): number[][] {
   const arr = nums
-  const arrs: Array<Array<number | string>> = []
+  const arrs: number[][] = []
   for (let i = 0; i <= arr.length - 1; i++) {
     for (let j = i + 1; j < arr.length; j++) {
       if (arr[i] + arr[j] === target) {
@@ -58,6 +63,10 @@ function twoNums(nums: Array<number>, target: number): Array<any> {
 
 console.warn(twoNums([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 9))
 
+/**
+ * 求和
+ * @param n 值
+ */
 function addNum(n: number): number {
   if (n === 1) {
     return 1
