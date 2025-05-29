@@ -5,3 +5,9 @@
     />
   </svg>
 </template>
+
+<script setup lang="ts">
+defineOptions({
+  name: 'IconDocumentation'
+})
+</script>

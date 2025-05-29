@@ -1,7 +1,9 @@
 <script setup lang="ts">
-defineProps<{
-  msg: string
-}>()
+defineOptions({
+  name: 'HelloWorld'
+})
+
+defineProps<{ msg: string }>()
 </script>
 
 <template>
@@ -32,7 +34,7 @@ h3 {
   text-align: center;
 }
 
-@media (width >= 1024px) {
+@media (width >=1024px) {
   .greetings h1,
   .greetings h3 {
     text-align: left;

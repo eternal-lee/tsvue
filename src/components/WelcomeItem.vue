@@ -12,6 +12,12 @@
   </div>
 </template>
 
+<script setup lang="ts">
+defineOptions({
+  name: 'WelcomeItem'
+})
+</script>
+
 <style scoped>
 .item {
   position: relative;
@@ -40,7 +46,7 @@ h3 {
   color: var(--color-heading);
 }
 
-@media (width >= 1024px) {
+@media (width >=1024px) {
   .item {
     padding: 0.4rem 0 1rem calc(var(--section-gap) / 2);
     margin-top: 0;
