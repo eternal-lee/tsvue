@@ -5,12 +5,19 @@ import type { GlobalState } from './interface'
 export const GlobalStore = defineStore({
   id: 'GlobalStore',
   state: (): GlobalState => ({
+    // language
+    language: 'en',
     counter: 0,
     id: ''
   }),
   actions: {
     add() {
       this.counter++
+    },
+    // updateLanguage
+    updateLanguage(language: string) {
+      if (!language) return
+      this.language = language
     }
   },
   // persist: true
