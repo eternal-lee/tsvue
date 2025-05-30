@@ -12,7 +12,7 @@
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --build --force",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-pattern .gitignore",
     "format": "prettier --write src/",
     "prepare": "husky"
   },
@@ -20,6 +20,7 @@
     "pinia": "^2.3.1",
     "pinia-plugin-persistedstate": "^4.2.0",
     "vue": "^3.5.13",
+    "vue-i18n": "^11.1.5",
     "vue-router": "^4.5.0"
   },
   "devDependencies": {
@@ -35,11 +36,12 @@
     "@vue/eslint-config-typescript": "^13.0.0",
     "@vue/tsconfig": "^0.5.1",
     "cz-git": "^1.11.1",
-    "eslint": "^9.23.0",
+    "eslint": "^9.27.0",
     "eslint-config-prettier": "^10.1.1",
-    "eslint-plugin-jsdoc": "^50.6.9",
+    "eslint-plugin-jsdoc": "^50.6.17",
     "eslint-plugin-prettier": "^5.2.6",
     "eslint-plugin-vue": "^9.33.0",
+    "globals": "^16.2.0",
     "husky": "^9.1.7",
     "less": "^4.2.2",
     "less-loader": "^12.2.0",
