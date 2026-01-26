@@ -7,11 +7,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vite 库模式</title>
   <script src="https://unpkg.com/vue@3.5.27/dist/vue.global.js"></script>
+  <script src="es/index.iife.js"></script>
 </head>
 
 <body>
+  <ieter-button type="primary"></ieter-button>
+  <ieter-foo></ieter-foo>
   <div id="app"></div>
   <script type="module" src="/src/main.ts"></script>
+
+  <script>
+    ieterComponents.default.register()
+  </script>
 </body>
 
 </html>

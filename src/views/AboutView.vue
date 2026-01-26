@@ -47,7 +47,9 @@ function twoNums(nums: Array<number>, target: number): Array<any> {
   const arrs: Array<Array<number | string>> = []
   for (let i = 0; i <= arr.length - 1; i++) {
     for (let j = i + 1; j < arr.length; j++) {
-      if (arr[i] + arr[j] === target) {
+      const ai = arr[i]
+      const aj = arr[j]
+      if (ai !== undefined && aj !== undefined && ai + aj === target) {
         arrs.push([i, j])
       }
     }

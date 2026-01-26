@@ -1,0 +1,40 @@
+.ieter-button {
+  width: fit-content;
+  padding: 10px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.ieter-button--default {
+  color: #333;
+  background-color: #f0f0f0;
+}
+
+.ieter-button--primary {
+  color: white;
+  background-color: #409eff;
+}
+
+.ieter-button--success {
+  color: white;
+  background-color: #67c23a;
+}
+
+.ieter-button--warning {
+  color: white;
+  background-color: #e6a23c;
+}
+
+.ieter-button--danger {
+  color: white;
+  background-color: #f56c6c;
+}
+
+.is-disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
