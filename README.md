@@ -37,3 +37,20 @@ npm run build
 ```sh
 npm run lint
 ```
+
+## css引入
+
+```js
+npm install vite-plugin-libcss --save-dev
+
+import libcss from 'vite-plugin-libcss'
+
+plugins: [
+  vue(),
+  libcss() // 将 CSS 注入到 JS 中
+}
+```
+
+```js
+import '@ieter/components/index.css'
+```

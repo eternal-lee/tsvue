@@ -34,6 +34,10 @@ export default defineConfig({
       resolvers: []
     })
   ],
+  // 在构建时替换代码中的 process.env.NODE_ENV，避免浏览器运行时报错
+  define: {
+    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
